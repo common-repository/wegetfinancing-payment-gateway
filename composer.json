@@ -1,0 +1,55 @@
+{
+  "name": "wegetfinancing/woocommerce-checkout-plugin",
+  "description": "Woocommerce checkout plugin",
+  "version": "1.4.2",
+  "homepage": "https://wegetfinancing.com",
+  "type": "software",
+  "license": "LGPL-3.0-only",
+  "authors": [
+    {
+      "name": "Riccardo De Leo",
+      "email": "riccardo.deleo@wegetfinancing.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "symfony/dependency-injection": "=6.0.20",
+    "twig/twig": "^3.0",
+    "wegetfinancing/php-sdk": "=v2.4.0",
+    "symfony/config": "^6.0",
+    "sentry/sdk": "^3.5"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "@stable",
+    "squizlabs/php_codesniffer": "@stable",
+    "friendsofphp/php-cs-fixer": "@stable",
+    "twbs/bootstrap": "5.3.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "WeGetFinancing\\Checkout\\": "src/"
+    }
+  },
+  "scripts": {
+    "stan": [
+      "php -d memory_limit=-1 vendor/bin/phpstan"
+    ],
+    "cs-fix": [
+      "php -d memory_limit=-1 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+    ],
+    "cs-fix-test": [
+      "php -d memory_limit=-1 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run"
+    ],
+    "phpcs": [
+      "php -d memory_limit=-1 vendor/bin/phpcs phpcs.xml src/"
+    ],
+    "deploy-assets": [
+      "cp vendor/twbs/bootstrap/dist/css/bootstrap.min.css dist/bootstrap.min.css && cp vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js dist/bootstrap.bundle.min.js"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}

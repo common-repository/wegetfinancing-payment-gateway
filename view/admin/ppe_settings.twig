@@ -1,0 +1,219 @@
+<style>
+    .row {
+        padding-top: 2em;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <h1>WeGetFinancing PPE Configuration Page</h1>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top: 25px;" id="ppe_settings_messages_area">
+        {% if isConfigured == false %}
+            <div class="notice notice-error is-dismissible">
+                <p>{{ notConfiguredLabel }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <form id="wegetfinancing-ppe-config-form">
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ ppeIsActiveId }}" {% if ppeIsActiveValue %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ ppeIsActiveId }}">{{ ppeIsActiveName }}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppePriceSelectorId }}" class="form-label">{{ ppePriceSelectorName }}</label>
+                        <input
+                                id="{{ ppePriceSelectorId }}"
+                                value="{{ ppePriceSelectorValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppePriceSelectorId }}_help"
+                        />
+                        <div id="{{ ppePriceSelectorId }}_help" class="form-text">{{ ppePriceSelectorLabel }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppeProductNameSelectorId }}" class="form-label">{{ ppeProductNameSelectorName }}</label>
+                        <input
+                                id="{{ ppeProductNameSelectorId }}"
+                                value="{{ ppeProductNameSelectorValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppeProductNameSelectorId }}_help"
+                        />
+                        <div id="{{ ppeProductNameSelectorId }}_help" class="form-text">{{ ppeProductNameSelectorLabel }}</div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ ppeIsDebugId }}" {% if ppeIsDebugValue %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ ppeIsDebugId }}">{{ ppeIsDebugName }}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppeTokenId }}" class="form-label">{{ ppeTokenName }}</label>
+                        <input
+                                id="{{ ppeTokenId }}"
+                                value="{{ ppeTokenValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppeTokenId }}_help"
+                        />
+                        <div id="{{ ppeTokenId }}_help" class="form-text">{{ ppeTokenLabel }}</div>
+                    </div>
+{#                    <div class="mb-3 form-check">#}
+{#                        <input type="checkbox" class="form-check-input" id="{{ ppeIsApplyNowId }}" {% if ppeIsApplyNowValue %}checked{% endif %}>#}
+{#                        <label class="form-check-label" for="{{ ppeIsApplyNowId }}">{{ ppeIsApplyNowName }}</label>#}
+{#                    </div>#}
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ ppeIsBrandedId }}" {% if ppeIsBrandedValue %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ ppeIsBrandedId }}">{{ ppeIsBrandedName }}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppeMinAmountId }}" class="form-label">{{ ppeMinAmountName }}</label>
+                        <input
+                                id="{{ ppeMinAmountId }}"
+                                value="{{ ppeMinAmountValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppeMinAmountId }}_help"
+                        />
+                        <div id="{{ ppeMinAmountId }}_help" class="form-text">{{ ppeMinAmountLabel }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppeCustomTextId }}" class="form-label">{{ ppeCustomTextName }}</label>
+                        <input
+                                id="{{ ppeCustomTextId }}"
+                                value="{{ ppeCustomTextValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppeCustomTextId }}_help"
+                        />
+                        <div id="{{ ppeCustomTextId }}_help" class="form-text">{{ ppeCustomTextLabel }}</div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ ppeIsHoverId }}" {% if ppeIsHoverValue %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ ppeIsHoverId }}">{{ ppeIsHoverName }}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppeFontSizeId }}" class="form-label">{{ ppeFontSizeName }}</label>
+                        <input
+                                id="{{ ppeFontSizeId }}"
+                                value="{{ ppeFontSizeValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppeFontSizeId }}_help"
+                        />
+                        <div id="{{ ppeFontSizeId }}_help" class="form-text">{{ ppeFontSizeLabel }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ ppePositionId }}" class="form-label">{{ ppePositionName }}</label>
+                        <input
+                                id="{{ ppePositionId }}"
+                                value="{{ ppePositionValue }}"
+                                type="text"
+                                class="form-control"
+                                aria-describedby="{{ ppePositionId }}_help"
+                        />
+                        <div id="{{ ppePositionId }}_help" class="form-text">{{ ppePositionLabel }}</div>
+                    </div>
+                    <a id="{{ ppeSaveButtonId }}" class="btn btn-primary {% if isConfigured == false %}disabled{% endif %}">Save</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function wgf_ppe_save_settings(settings) {
+        let request = {
+            'action': '{{ ajaxAction }}',
+            '_wpnonce': '{{ nonce }}',
+            'data': settings
+        }
+
+        jQuery.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ ajaxUrl }}",
+            data: request,
+            success: function(response){
+                let message = jQuery("#ppe_settings_messages_area");
+                message.html('');
+                if (response.isSuccess == false) {
+                    jQuery.each( response.violations, function( i, violation ) {
+                        jQuery('#'+violation.field).addClass('is-invalid');
+                        message.append('<div class="notice notice-error is-dismissible">'+
+                            '</p>'+violation.message+'</p>'+
+                            '</div>');
+                    });
+                } else {
+                    message.html('<div class="notice notice-success is-dismissible">'+
+                        '<p>{{ successMessage }}</p>'+
+                        '</div>');
+                }
+                jQuery("html, body").animate({
+                    scrollTop: 0
+                }, 5);
+            },
+            error: function(){
+                let message = jQuery("#ppe_settings_messages_area");
+                message.html('');
+                message.html('<div class="notice notice-error is-dismissible">'+
+                    '<p>{{ unexpectedServerErrorMessage }}</p>'+
+                    '</div>');
+                jQuery("html, body").animate({
+                    scrollTop: 0
+                }, 5);
+            },
+        });
+    }
+
+    function wgf_ppe_clean_input_data() {
+        {{ ppePriceSelectorId }}: jQuery('#{{ ppePriceSelectorId }}').removeClass('is-invalid');
+        {{ ppeProductNameSelectorId }}: jQuery('#{{ ppeProductNameSelectorId }}').removeClass('is-invalid');
+        {{ ppeTokenId }}: jQuery('#{{ ppeTokenId }}').removeClass('is-invalid');
+        {{ ppeMinAmountId }}: jQuery('#{{ ppeMinAmountId }}').removeClass('is-invalid');
+        {{ ppeCustomTextId }}: jQuery('#{{ ppeCustomTextId }}').removeClass('is-invalid');
+        {{ ppePositionId }}: jQuery('#{{ ppePositionId }}').removeClass('is-invalid');
+    }
+
+    jQuery('#{{ ppeSaveButtonId }}').click((e) => {
+        wgf_ppe_clean_input_data();
+
+        let isActive = jQuery('#{{ ppeIsActiveId }}').is(':checked')
+                ? "true" : "false",
+            isDebug = jQuery('#{{ ppeIsDebugId }}').is(':checked')
+                ? "true" : "false",
+            isApplyNow = jQuery('#{{ ppeIsApplyNowId }}').is(':checked')
+                ? "true" : "false",
+            isBranded = jQuery('#{{ ppeIsBrandedId }}').is(':checked')
+                ? "true" : "false",
+            isHover = jQuery('#{{ ppeIsHoverId }}').is(':checked')
+                ? "true" : "false";
+
+        let settings = {
+            {{ ppeIsActiveId }}: isActive,
+            {{ ppePriceSelectorId }}: jQuery('#{{ ppePriceSelectorId }}').val(),
+            {{ ppeProductNameSelectorId }}: jQuery('#{{ ppeProductNameSelectorId }}').val(),
+            {{ ppeIsDebugId }}: isDebug,
+            {{ ppeIsApplyNowId }}: isApplyNow,
+            {{ ppeIsBrandedId }}: isBranded,
+            {{ ppeTokenId }}: jQuery('#{{ ppeTokenId }}').val(),
+            {{ ppeMinAmountId }}: jQuery('#{{ ppeMinAmountId }}').val(),
+            {{ ppeCustomTextId }}: jQuery('#{{ ppeCustomTextId }}').val(),
+            {{ ppePositionId }}: jQuery('#{{ ppePositionId }}').val(),
+            {{ ppeFontSizeId }}: jQuery('#{{ ppeFontSizeId }}').val(),
+            {{ ppeIsHoverId }}: isHover
+        };
+
+        wgf_ppe_save_settings(settings);
+    });
+
+    {% if isConfigured == false %}
+        jQuery(document).ready(function() {
+            jQuery("#wegetfinancing-ppe-config-form input").prop("disabled", true);
+        });
+    {% endif %}
+</script>
